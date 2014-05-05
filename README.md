@@ -5,7 +5,8 @@ Transliteration-Dictionary Based Suggestion Library - Javascript
 
 # Diacritical
 
-## http://chadananda.github.io/diacritical
+### Example: http://chadananda.github.io/diacritical
+### Test harness: http://chadananda.github.io/tests
 
 
 ### The big idea:

@@ -40,7 +40,7 @@ var dictionary = [
     'Dalílu’l-Mutaḥayyirín',
     'Fatḥ-‘Alí',
 ];
-var bad_text = "This is some sample text with bad diacritcals: Ahmad, Baghdad, "+
+var bad_text = "This is some sample text with bad diacriticals: Ahmad, Baghdad, "+
   "Fath-Ali and Baqi. Notice that the dictionary uses _sh to indicate an "+
   "underscore. Also, notice that the dictionary is case sensitive but the "+
   "replacement system is still smart enough to deal with all-caps like AHMAD. "+
@@ -50,5 +50,6 @@ var bad_text = "This is some sample text with bad diacritcals: Ahmad, Baghdad, "
   
 var fixed_text = diacritical.replaceText(bad_text, dictionary);
 ```
+#### See it in action here: http://chadananda.github.io/diacritical
 
 

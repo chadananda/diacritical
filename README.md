@@ -1,9 +1,5 @@
-Diacritical
-===========
-
-Transliteration-Dictionary Based Suggestion Library - Javascript
-
 # Diacritical
+_A Transliteration-Dictionary Based Suggestion Library_
 
 ### Example: http://chadananda.github.io/diacritical
 ### Test harness: http://chadananda.github.io/diacritical/tests

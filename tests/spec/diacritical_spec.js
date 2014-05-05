@@ -215,7 +215,7 @@
     });
 
     it("Correct a bunch of individual terms", function() {
-       var dictionary = d.prepareDictionary(getTestDictionaryList());
+       var dictionary = getTestDictionaryList();
        expect(d.replaceText('AHMAD', dictionary)).toEqual('AḤMAD');
        expect(d.replaceText('Abul-Fadl', dictionary)).toEqual('Abu’l-Faḍl');
        expect(d.replaceText('Baghdad', dictionary)).toEqual('Ba<u>gh</u>dád');

@@ -1,30 +1,33 @@
 # Diacriṭícál
-_A Transliteration-Dictionary Based Suggestion Library_
+_Transliteration-Dictionary Suggestion Script_
 
-### Example: http://chadananda.github.io/diacritical
-### Test harness: http://chadananda.github.io/diacritical/tests
+### Home Page: http://chadananda.github.io/diacritical
+
+
 
 
 ### The big idea:
 
 Formatting Bahá’í electronic texts is a pain. Even the best quality electronic texts from the BWC contain thousands of errors. And by far the most common type of error is the darned diacritcals on all those transliterated Arabic and Persian terms.
 
-This project attempts to address that fundamental problem by providing an automated replacement and suggestion system which can utilize a dictionary of authoritatively spelled terms.  
+This project attempts to address that fundamental problem by providing an automated replacement and suggestion system which can utilize a dictionary of authoritatively spelled terms.
 
-The project to actually gather that massive correct dictionary is over here:
 
-#### https://github.com/chadananda/accents
+
 
 
 ### Get involved, help build the dictionary!
 
-To get involved, simply contact me at <chadananda@gmail.com>. I'll set up user credentials for you which allow you to log in and start adding words to the dictionary. 
+The project to actually gather that massive correct dictionary is over here: https://github.com/chadananda/accents
+
+To get involved, simply contact me at <chadananda@gmail.com>. I'll set up user credentials for you which allow you to log in and start adding words to the dictionary.
 
 A JSON object containing the current wordlist can be pulled down using this REST URL:
 
   * http://diacritics.iriscouch.com/accents/_design/terms_list/_view/terms_list?group=true&group_level=1
-  
-  
+
+
+
 
 ### Using the Library
 
@@ -53,9 +56,10 @@ var bad_text = "This is some sample text with bad diacriticals: Ahmad, Baghdad, 
   "Moreover, the dictionary ideally should have multiple versions of each word in "+
   "order to help weed out misspellings. (Notice one of the spellings of Ahmad is "+
   "wrong in the dictionary but the word is still corrected correctly.)";
-  
+
 var fixed_text = diacritical.replaceText(bad_text, dictionary);
 ```
-#### See it in action here: http://chadananda.github.io/diacritical
+
+### Test harness: http://chadananda.github.io/diacritical/tests
 
 

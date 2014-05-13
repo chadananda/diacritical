@@ -1,185 +1,121 @@
-<!DOCTYPE html><html>
-<head>
-   <meta charset="utf-8">
-   <style>
-    body {padding:.5em; font-family: arial;}
-    * {
-      box-sizing:border-box !important;
-      -moz-box-sizing:border-box;
-      -webkit-box-sizing:border-box;
-    }
-    p {font-size: 18pt; line-height: 1.5em; font-family: 'Gothic';}
-    mark.term {background: none; border: 1px solid silver; border-radius:3px;}
-	  mark.term.correction {text-shadow: 0px 0px .3em rgba(255,230,0,.5); }
-	  mark.term.misspelled {text-decoration: line-through; border: 0;}
-    mark.term.unknown  {text-shadow: 0px 0px .3em rgba(100,149,237,.8);}
-    div.legend {font-size: 9.5pt; margin: .5em; padding:.5em; float:right; line-height: 1.5em; border: 1px dashed gray;}
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link href='https://fonts.googleapis.com/css?family=Architects+Daughter' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
 
-    .accents-report {width: 80%; border: 1px dashed silver;
-      line-height: 1em; font-size: 14pt; margin: 1em; padding: .75em;
-    }
-    .accents-report h4 {margin: 5px; padding: 0; }
-    .accents-modified {border: 2px solid gray; margin: 1em; padding: 1em;}
-   </style>
-</head>
-<body>
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
 
-<h1> "Diacritical" Live Demonstration </h1>
-<p> <i>Dictionary-Based Term Correction </i>
+    <title>Diacritical by chadananda</title>
+  </head>
 
-<p> This is a live demonstration (running in the browser in JavaScript) of tokenizing and then correcting a block of text using a dictionary of Bahá'í terms. It demonstrates correctly handling complex situations such as all-caps, possesives, quote-surrounded terms, embedded HTML tags, m-dashes and other complex punctuation. It also demonstrates the ability to identify possible new terms that are not in the dictionary. This tokenizer uses a single pass for optimal speed. A basic unit-test harness has also been started: <a href="tests/" target="_blank">Show Unit Tests</a>
+  <body>
+    <header>
+      <div class="inner">
+        <h1>Diacritical</h1>
+        <h2>Transliteration-Dictionary Based Suggestion Library - Javascript</h2>
+        <a href="https://github.com/chadananda/diacritical" class="button"><small>View project on</small>GitHub</a>
+      </div>
+    </header>
 
-  <br><br>
+    <div id="content-wrapper">
+      <div class="inner clearfix">
+        <section id="main-content">
+          <h1>
+<a name="diacritical" class="anchor" href="#diacritical"><span class="octicon octicon-link"></span></a>Diacritical</h1>
 
+<p><em>A Transliteration-Dictionary Based Suggestion Library</em></p>
 
+<h3>
+<a name="example-httpchadanandagithubiodiacritical" class="anchor" href="#example-httpchadanandagithubiodiacritical"><span class="octicon octicon-link"></span></a>Example: <a href="http://chadananda.github.io/diacritical">http://chadananda.github.io/diacritical</a>
+</h3>
 
-<p id='12' class="accents-replace">
+<h3>
+<a name="test-harness-httpchadanandagithubiodiacriticaltests" class="anchor" href="#test-harness-httpchadanandagithubiodiacriticaltests"><span class="octicon octicon-link"></span></a>Test harness: <a href="http://chadananda.github.io/diacritical/tests">http://chadananda.github.io/diacritical/tests</a>
+</h3>
 
+<h3>
+<a name="the-big-idea" class="anchor" href="#the-big-idea"><span class="octicon octicon-link"></span></a>The big idea:</h3>
 
-This is some sample text with bad diacritics: Ahmad, Baghdad,
-Fath-Ali and Baqi. Notice that the dictionary uses _sh to indicate an
-underscore. Also, notice that the dictionary is case sensitive but the
-replacement system is still smart enough to deal with all caps like AHMAD.
-Also, the dictionary ideally should have multiple versions of each word in
-order to help weed out misspellings. (Notice one of the spellings of Ahmad is
-wrong in the dictionary but the word is still corrected correctly.)
+<p>Formatting Bahá’í electronic texts is a pain. Even the best quality electronic texts from the BWC contain thousands of errors. And by far the most common type of error is the darned diacritcals on all those transliterated Arabic and Persian terms.</p>
 
-<br><br>
+<p>This project attempts to address that fundamental problem by providing an automated replacement and suggestion system which can utilize a dictionary of authoritatively spelled terms.  </p>
 
-  <span>MUHIT-I-SHÁ'IR-I-KIRMANI:</span> Lorem ipsum dolor sit Abul-Fadl,
-Abu'l-Fadl et "Abu'l-Fadl" elit, sed do Ahsanu’l-Qisas
-tempor incididunt ut Baghdad et dolore magna Baqi. Ut
-Baqir-i-Ra<u>sh</u>tí ad minim Fath-'Ali, quis
-Ismá'il-i-<u>Dh</u>abíh exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-Duis aute Fátimih dolor in Shadíd in voluptate velit esse cillum
-dolore eu fugiat nulla pariatur. 'Abdu’l-Khaliq-i-Yazdi sint
-'Abdu'l-Kháliq-i-Yazdi et Siyyidu'<u>sh</u>-<u>Sh</u>uhadá
-non proident, sunt in Askarí qui ‘Askarí or
-"Askari" Mihdíy-i-<u>Kh</u>u'í mollit
-<u>Sh</u>aykhis id <u>Sh</u>aykh
-Abdu'l-<u>Kh</u>álíq-i-Yazdi. Lorem ipsum '‘Abbás' sit
-‘Abbás,". 'Abbas's adipisicing elit, sed do
-"Siyyidu’sh-Shuhadá‘" tempor incididunt ut Dhi'l-Qa'dih
-et dolore magna <u>Sh</u>íráz.
+<p>The project to actually gather that massive correct dictionary is over here:</p>
 
-</p>
+<h4>
+<a name="httpsgithubcomchadanandaaccents" class="anchor" href="#httpsgithubcomchadanandaaccents"><span class="octicon octicon-link"></span></a><a href="https://github.com/chadananda/accents">https://github.com/chadananda/accents</a>
+</h4>
 
+<h3>
+<a name="get-involved-help-build-the-dictionary" class="anchor" href="#get-involved-help-build-the-dictionary"><span class="octicon octicon-link"></span></a>Get involved, help build the dictionary!</h3>
 
+<p>To get involved, simply contact me at <a href="mailto:chadananda@gmail.com">chadananda@gmail.com</a>. I'll set up user credentials for you which allow you to log in and start adding words to the dictionary. </p>
 
+<p>A JSON object containing the current wordlist can be pulled down using this REST URL:</p>
 
+<ul>
+<li><a href="http://diacritics.iriscouch.com/accents/_design/terms_list/_view/terms_list?group=true&amp;group_level=1">http://diacritics.iriscouch.com/accents/_design/terms_list/_view/terms_list?group=true&amp;group_level=1</a></li>
+</ul><h3>
+<a name="using-the-library" class="anchor" href="#using-the-library"><span class="octicon octicon-link"></span></a>Using the Library</h3>
 
-</body>
+<p>After adding diacritical.js to a web page simply provide a dictionary of UTF-8 terms as a Javascript array. For example:</p>
+
+<div class="highlight highlight-Javascript"><pre><span class="kd">var</span> <span class="nx">diacrital</span> <span class="o">=</span> <span class="nx">New</span> <span class="nx">Diacritical</span><span class="p">();</span>
+<span class="kd">var</span> <span class="nx">dictionary</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s1">'Abu’l-Faḍl'</span><span class="p">,</span>
+    <span class="s1">'Aḥmad'</span><span class="p">,</span>
+    <span class="s1">'Aḥmad'</span><span class="p">,</span>
+    <span class="s1">'Aḥmad'</span><span class="p">,</span>
+    <span class="s1">'Ahmad'</span><span class="p">,</span>
+    <span class="s1">'aḥmad'</span><span class="p">,</span>
+    <span class="s1">'Aḥsanu’l-Qiṣaṣ'</span><span class="p">,</span>
+    <span class="s1">'Ba_ghdád'</span><span class="p">,</span>
+    <span class="s1">'Baqí‘'</span><span class="p">,</span>
+    <span class="s1">'Báqir-i-Ra_shtí'</span><span class="p">,</span>
+    <span class="s1">'Dalílu’l-Mutaḥayyirín'</span><span class="p">,</span>
+    <span class="s1">'Fatḥ-‘Alí'</span><span class="p">,</span>
+<span class="p">];</span>
+<span class="kd">var</span> <span class="nx">bad_text</span> <span class="o">=</span> <span class="s2">"This is some sample text with bad diacriticals: Ahmad, Baghdad, "</span><span class="o">+</span>
+  <span class="s2">"Fath-Ali and Baqi. Notice that the dictionary uses _sh to indicate an "</span><span class="o">+</span>
+  <span class="s2">"underscore. Also, notice that the dictionary is case sensitive but the "</span><span class="o">+</span>
+  <span class="s2">"replacement system is still smart enough to deal with all-caps like AHMAD. "</span><span class="o">+</span>
+  <span class="s2">"Moreover, the dictionary ideally should have multiple versions of each word in "</span><span class="o">+</span>
+  <span class="s2">"order to help weed out misspellings. (Notice one of the spellings of Ahmad is "</span><span class="o">+</span>
+  <span class="s2">"wrong in the dictionary but the word is still corrected correctly.)"</span><span class="p">;</span>
+
+<span class="kd">var</span> <span class="nx">fixed_text</span> <span class="o">=</span> <span class="nx">diacritical</span><span class="p">.</span><span class="nx">replaceText</span><span class="p">(</span><span class="nx">bad_text</span><span class="p">,</span> <span class="nx">dictionary</span><span class="p">);</span>
+</pre></div>
+
+<h4>
+<a name="see-it-in-action-here-httpchadanandagithubiodiacritical" class="anchor" href="#see-it-in-action-here-httpchadanandagithubiodiacritical"><span class="octicon octicon-link"></span></a>See it in action here: <a href="http://chadananda.github.io/diacritical">http://chadananda.github.io/diacritical</a>
+</h4>
+        </section>
+
+        <aside id="sidebar">
+          <a href="https://github.com/chadananda/diacritical/zipball/master" class="button">
+            <small>Download</small>
+            .zip file
+          </a>
+          <a href="https://github.com/chadananda/diacritical/tarball/master" class="button">
+            <small>Download</small>
+            .tar.gz file
+          </a>
+
+          <p class="repo-owner"><a href="https://github.com/chadananda/diacritical"></a> is maintained by <a href="https://github.com/chadananda">chadananda</a>.</p>
+
+          <p>This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the Architect theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.</p>
+        </aside>
+      </div>
+    </div>
+
+  
+  </body>
 </html>
-
-
-
-
-<script src="//code.jquery.com/jquery-2.1.0.min.js"></script>
-<script src="diacritical.js"></script>
-
-<script type="text/javascript">
-  // test replacement code
-// text is block of text to process
-// wordlist is an array of terms in utf8
-// textType is either 'html' or 'text'
-// options: array of replacement style options
-  // options.suggest (boolean) misspelled words are not replaced but suggestions are appended after the word
-  // options.showreport (bioolean) adds a report to the end of the document
-function accents_replacement(text, dictionary, type, options) {
-
-  var diacritical = new Diacritical(),
-      wordlist = dictionary,
-      result = {report: {}, type: 'text', text:'', html:''},
-      originalText, markedText, cleanText,
-      report = {},
-      tokens = [];
-
-  // prepare dictionary
-  dictionary = diacritical.prepareDictionary(dictionary); //console.log(dictionary);
-  // tokenize text
-  tokens = diacritical.tokenizeString(text, type);
-  // look up term suggestions
-  diacritical.addTermSuggestions(tokens, dictionary, report);
-
-  // re-create text block with marks
-  // options: [clean], showall, suggest, original
-  originalText = diacritical.rebuildBlock(tokens, 'original');
-  markedText = diacritical.rebuildBlock(tokens, 'showall');
-  cleanText = diacritical.rebuildBlock(tokens);
-
-  result.report = report;
-  result.html = "<div> <h3>Original Text With Errors:</h3> " + originalText + "</div>"+
-    "<hr />" + "<div> <h3>Showing all Corrections:</h3> "+
-    "<div class='legend'> "+
-    "<mark class='term correct'>Correct Term</mark> <br>"+
-    "<mark class='term misspelled'>Misspelled</mark> <br>"+
-    "<mark class='term correction'>Suggestion</mark> <br>"+
-    "<mark class='term unknown'>Unknown Term</mark> </div>"+
-    "" + markedText + "</div>" +
-    "<hr />" + "<div> <h3>Automated Correction Mode:</h3> "+
-    "" + cleanText + "</div> <hr> ";
-  //result.report.type = type;
-  result.reportText = JSON.stringify(result.report, undefined, 2);
-  result.reportHTML = "<pre>" + result.reportText + "</pre>";
-
-  return result;
-}
-
-
-</script>
-
-
-<script type="text/javascript">
-// ok, just a little test bed for HTML conversion
-$(function(){
-
-  var replaceBlocks = $('.accents-replace');
-  var wordlist = [
-    'Abu’l-Faḍl',
-    'Aḥmad',
-    'Aḥsanu’l-Qiṣaṣ',
-    'Ba_ghdád',
-    'Baqí‘',
-    'Báqir-i-Ra_shtí',
-    'Dalílu’l-Mutaḥayyirín',
-    'Fatḥ-‘Alí',
-    'Ismá‘íl-i-_Dhabíḥ',
-    'Jabal-i-_Shadíd',
-    'Ja‘far',
-    'Kázim-i-Ra_shtí',
-    'Mullá',
-    'Maḥmúd-i-Qamṣarí',
-    'Mihdíy-i-_Khu’í',
-    'Muḥít-i-_Shá‘ir-i-Kirmání',
-    'Mu’a_dh_dhin',
-    'Nabíl-i-A‘ẓam',
-    'Qaṣídiy-i-Varqá’íyyih',
-    'Siyyidu’_sh-_Shuhadá’',
-    '_Shay_kh',
-    '_Shay_khí',
-    '_Shay_khís',
-    'shí‘ah',
-    '‘Abbás',
-    '‘Abdu’l-_Kháliq-i-Yazdí',
-    '‘Askarí',
-    '_Shá‘ir',
-    '_Shíráz'
-  ];
-
-  replaceBlocks.each(function(index, Element) {
-    var htmlBlock = $(this).html();
-    var type = $(this).hasClass('text') ? 'text' : 'html';
-    var replace = accents_replacement(htmlBlock, wordlist, type);
-    var report = "<div class='accents-report'> <h4>Modification Report:</h4>"+replace.reportHTML+"</div>";
-    var text = replace.text ? replace.text : replace.html;
-    $(this).html(text + report);
-  });
-
-
-
-
-});
-</script>
-
-
-

@@ -20,9 +20,11 @@ The project to actually gather that massive correct dictionary is over here:
 
 To get involved, simply contact me at <chadananda@gmail.com>. I'll set up user credentials for you which allow you to log in and start adding words to the dictionary. 
 
-A copy of the current wordlist can be pulled down using this REST URL:
+A JSON object containing the current wordlist can be pulled down using this REST URL:
 
-  http://diacritics.iriscouch.com/accents/_design/terms_list/_view/terms_list?group=true&group_level=1
+  * http://diacritics.iriscouch.com/accents/_design/terms_list/_view/terms_list?group=true&group_level=1
+  
+  
 
 ### Using the Library
 

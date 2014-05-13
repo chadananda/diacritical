@@ -1,0 +1,185 @@
+<!DOCTYPE html><html>
+<head>
+   <meta charset="utf-8">
+   <style>
+    body {padding:.5em; font-family: arial;}
+    * {
+      box-sizing:border-box !important;
+      -moz-box-sizing:border-box;
+      -webkit-box-sizing:border-box;
+    }
+    p {font-size: 18pt; line-height: 1.5em; font-family: 'Gothic';}
+    mark.term {background: none; border: 1px solid silver; border-radius:3px;}
+	  mark.term.correction {text-shadow: 0px 0px .3em rgba(255,230,0,.5); }
+	  mark.term.misspelled {text-decoration: line-through; border: 0;}
+    mark.term.unknown  {text-shadow: 0px 0px .3em rgba(100,149,237,.8);}
+    div.legend {font-size: 9.5pt; margin: .5em; padding:.5em; float:right; line-height: 1.5em; border: 1px dashed gray;}
+
+    .accents-report {width: 80%; border: 1px dashed silver;
+      line-height: 1em; font-size: 14pt; margin: 1em; padding: .75em;
+    }
+    .accents-report h4 {margin: 5px; padding: 0; }
+    .accents-modified {border: 2px solid gray; margin: 1em; padding: 1em;}
+   </style>
+</head>
+<body>
+
+<h1> "Diacritical" Live Demonstration </h1>
+<p> <i>Dictionary-Based Term Correction </i>
+
+<p> This is a live demonstration (running in the browser in JavaScript) of tokenizing and then correcting a block of text using a dictionary of Bahá'í terms. It demonstrates correctly handling complex situations such as all-caps, possesives, quote-surrounded terms, embedded HTML tags, m-dashes and other complex punctuation. It also demonstrates the ability to identify possible new terms that are not in the dictionary. This tokenizer uses a single pass for optimal speed. A basic unit-test harness has also been started: <a href="tests/" target="_blank">Show Unit Tests</a>
+
+  <br><br>
+
+
+
+<p id='12' class="accents-replace">
+
+
+This is some sample text with bad diacritics: Ahmad, Baghdad,
+Fath-Ali and Baqi. Notice that the dictionary uses _sh to indicate an
+underscore. Also, notice that the dictionary is case sensitive but the
+replacement system is still smart enough to deal with all caps like AHMAD.
+Also, the dictionary ideally should have multiple versions of each word in
+order to help weed out misspellings. (Notice one of the spellings of Ahmad is
+wrong in the dictionary but the word is still corrected correctly.)
+
+<br><br>
+
+  <span>MUHIT-I-SHÁ'IR-I-KIRMANI:</span> Lorem ipsum dolor sit Abul-Fadl,
+Abu'l-Fadl et "Abu'l-Fadl" elit, sed do Ahsanu’l-Qisas
+tempor incididunt ut Baghdad et dolore magna Baqi. Ut
+Baqir-i-Ra<u>sh</u>tí ad minim Fath-'Ali, quis
+Ismá'il-i-<u>Dh</u>abíh exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+Duis aute Fátimih dolor in Shadíd in voluptate velit esse cillum
+dolore eu fugiat nulla pariatur. 'Abdu’l-Khaliq-i-Yazdi sint
+'Abdu'l-Kháliq-i-Yazdi et Siyyidu'<u>sh</u>-<u>Sh</u>uhadá
+non proident, sunt in Askarí qui ‘Askarí or
+"Askari" Mihdíy-i-<u>Kh</u>u'í mollit
+<u>Sh</u>aykhis id <u>Sh</u>aykh
+Abdu'l-<u>Kh</u>álíq-i-Yazdi. Lorem ipsum '‘Abbás' sit
+‘Abbás,". 'Abbas's adipisicing elit, sed do
+"Siyyidu’sh-Shuhadá‘" tempor incididunt ut Dhi'l-Qa'dih
+et dolore magna <u>Sh</u>íráz.
+
+</p>
+
+
+
+
+
+</body>
+</html>
+
+
+
+
+<script src="//code.jquery.com/jquery-2.1.0.min.js"></script>
+<script src="diacritical.js"></script>
+
+<script type="text/javascript">
+  // test replacement code
+// text is block of text to process
+// wordlist is an array of terms in utf8
+// textType is either 'html' or 'text'
+// options: array of replacement style options
+  // options.suggest (boolean) misspelled words are not replaced but suggestions are appended after the word
+  // options.showreport (bioolean) adds a report to the end of the document
+function accents_replacement(text, dictionary, type, options) {
+
+  var diacritical = new Diacritical(),
+      wordlist = dictionary,
+      result = {report: {}, type: 'text', text:'', html:''},
+      originalText, markedText, cleanText,
+      report = {},
+      tokens = [];
+
+  // prepare dictionary
+  dictionary = diacritical.prepareDictionary(dictionary); //console.log(dictionary);
+  // tokenize text
+  tokens = diacritical.tokenizeString(text, type);
+  // look up term suggestions
+  diacritical.addTermSuggestions(tokens, dictionary, report);
+
+  // re-create text block with marks
+  // options: [clean], showall, suggest, original
+  originalText = diacritical.rebuildBlock(tokens, 'original');
+  markedText = diacritical.rebuildBlock(tokens, 'showall');
+  cleanText = diacritical.rebuildBlock(tokens);
+
+  result.report = report;
+  result.html = "<div> <h3>Original Text With Errors:</h3> " + originalText + "</div>"+
+    "<hr />" + "<div> <h3>Showing all Corrections:</h3> "+
+    "<div class='legend'> "+
+    "<mark class='term correct'>Correct Term</mark> <br>"+
+    "<mark class='term misspelled'>Misspelled</mark> <br>"+
+    "<mark class='term correction'>Suggestion</mark> <br>"+
+    "<mark class='term unknown'>Unknown Term</mark> </div>"+
+    "" + markedText + "</div>" +
+    "<hr />" + "<div> <h3>Automated Correction Mode:</h3> "+
+    "" + cleanText + "</div> <hr> ";
+  //result.report.type = type;
+  result.reportText = JSON.stringify(result.report, undefined, 2);
+  result.reportHTML = "<pre>" + result.reportText + "</pre>";
+
+  return result;
+}
+
+
+</script>
+
+
+<script type="text/javascript">
+// ok, just a little test bed for HTML conversion
+$(function(){
+
+  var replaceBlocks = $('.accents-replace');
+  var wordlist = [
+    'Abu’l-Faḍl',
+    'Aḥmad',
+    'Aḥsanu’l-Qiṣaṣ',
+    'Ba_ghdád',
+    'Baqí‘',
+    'Báqir-i-Ra_shtí',
+    'Dalílu’l-Mutaḥayyirín',
+    'Fatḥ-‘Alí',
+    'Ismá‘íl-i-_Dhabíḥ',
+    'Jabal-i-_Shadíd',
+    'Ja‘far',
+    'Kázim-i-Ra_shtí',
+    'Mullá',
+    'Maḥmúd-i-Qamṣarí',
+    'Mihdíy-i-_Khu’í',
+    'Muḥít-i-_Shá‘ir-i-Kirmání',
+    'Mu’a_dh_dhin',
+    'Nabíl-i-A‘ẓam',
+    'Qaṣídiy-i-Varqá’íyyih',
+    'Siyyidu’_sh-_Shuhadá’',
+    '_Shay_kh',
+    '_Shay_khí',
+    '_Shay_khís',
+    'shí‘ah',
+    '‘Abbás',
+    '‘Abdu’l-_Kháliq-i-Yazdí',
+    '‘Askarí',
+    '_Shá‘ir',
+    '_Shíráz'
+  ];
+
+  replaceBlocks.each(function(index, Element) {
+    var htmlBlock = $(this).html();
+    var type = $(this).hasClass('text') ? 'text' : 'html';
+    var replace = accents_replacement(htmlBlock, wordlist, type);
+    var report = "<div class='accents-report'> <h4>Modification Report:</h4>"+replace.reportHTML+"</div>";
+    var text = replace.text ? replace.text : replace.html;
+    $(this).html(text + report);
+  });
+
+
+
+
+});
+</script>
+
+
+

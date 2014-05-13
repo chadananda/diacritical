@@ -1,4 +1,4 @@
-# Diacritical
+# Diacriṭícál
 _A Transliteration-Dictionary Based Suggestion Library_
 
 ### Example: http://chadananda.github.io/diacritical

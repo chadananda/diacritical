@@ -54,6 +54,9 @@
 
 
 <!-- ==================================== -->
+
+
+
 <h2>The Big Idea:</h2>
 
 <p>Formatting Bahá’í electronic texts is a pain. Even the best quality electronic texts from the BWC contain thousands of errors. And by far the most common type of error is the darned diacritcals on all those transliterated Arabic and Persian terms.</p>
@@ -71,7 +74,7 @@
 <h2>Generate a Suggestion Report for your own Text: </h2>
 
 <p> An implementation of the script which pulls down the current wordlist. You can run entire books through this little example.
-<a href="http://chadananda.github.io/diacritical/html/report.html">http://chadananda.github.io/diacritical/html/conversion.html</a>
+<a href="http://chadananda.github.io/diacritical/html/report.html">http://chadananda.github.io/diacritical/html/report.html</a>
 
 
 <!-- ==================================== -->
@@ -212,45 +215,7 @@
 
     }) });
 
-    /*
-    function accents_replacement(text, dictionary, type, options) {
 
-      var diacritical = new Diacritical(),
-          wordlist = dictionary,
-          result = {report: {}, type: 'text', text:'', html:''},
-          markedText, cleanText,
-          report = {},
-          tokens = [];
-
-      // prepare dictionary
-      dictionary = diacritical.prepareDictionary(dictionary); //console.log(dictionary);
-      // tokenize text
-      tokens = diacritical.tokenizeString(text, type);
-      // look up term suggestions
-      diacritical.addTermSuggestions(tokens, dictionary, report);
-
-      // re-create text block with marks
-      // options: [clean], showall, suggest, original
-      markedText = diacritical.rebuildBlock(tokens, 'showall');
-      cleanText = diacritical.rebuildBlock(tokens);
-
-      result.report = report;
-      result.html = "<div> <h3>Showing Corrections:</h3> "+
-        "<div class='legend'> "+
-        "<mark class='term correct'>Correct Term</mark> <br>"+
-        "<mark class='term misspelled'>Misspelled</mark> <br>"+
-        "<mark class='term correction'>Suggestion</mark> <br>"+
-        "<mark class='term unknown'>Unknown Term</mark> </div>"+
-        "" + markedText + "</div>" +
-        "<hr />" + "<div> <h3>Automated Correction Mode:</h3> "+
-        "" + cleanText + "</div> <hr> ";
-      //result.report.type = type;
-      result.reportText = JSON.stringify(result.report, undefined, 2);
-      result.reportHTML = "<pre>" + result.reportText + "</pre>";
-
-      return result;
-    }
-    */
 
     </script>
 </html>

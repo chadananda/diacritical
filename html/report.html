@@ -1,0 +1,138 @@
+﻿<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link href='https://fonts.googleapis.com/css?family=Architects+Daughter' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
+
+
+
+
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <title>Diacritícál by Chad Jones</title>
+    <style>
+      h2 {margin-top:1em;}
+      #go_button {padding: 1em !important; font-size: 22pt; font-family: arial; height: 2em; float:right;}
+
+      mark.term {background: none; border: 1px solid silver; border-radius:3px;}
+      mark.term.correction {text-shadow: 0px 0px .3em rgba(255,230,0,.5); }
+      mark.term.misspelled {text-decoration: line-through; border: 0;}
+      mark.term.unknown  {text-shadow: 0px 0px .3em rgba(100,149,237,.8);}
+      div.legend {font-size: 9.5pt; margin: .5em; padding:.5em; float:right; line-height: 1.5em; border: 1px dashed gray;}
+
+      .accents-report {width: 80%; border: 1px dashed silver;
+        line-height: 1em; font-size: 14pt; margin: 1em; padding: .75em;
+      }
+      .accents-report h4 {margin: 5px; padding: 0; }
+      .accents-modified {border: 2px solid gray; margin: 1em; padding: 1em;}
+      #report_output {border: 1px dashed silver; margin: 1em; padding: 1em; padding-left:3em;
+        background-color: rgba(255,255,255,0.6); font-size:14pt;}
+
+      #textinput {width: 98%; height: 20em; resize: none; font-size:10pt; font-family: "courier new";}
+
+      #main-content {width:100% !important;}
+    </style>
+  </head>
+
+  <body>
+    <header>
+      <div class="inner">
+        <h1>Diacritícál</h1>
+        <h2>Bahá’í Term Suggestion Script</h2>
+        <a href="https://github.com/chadananda/diacritical" class="button"><small>View project on</small>GitHub</a>
+      </div>
+    </header>
+
+    <div id="content-wrapper">
+      <div class="inner clearfix">
+    <section id="main-content">
+
+<h1> Generate Suggestion Report </h1>
+
+<p> Paste in any text and generate a printable suggestion report showing possible corrections in your text.
+
+<p> <span id="dictionary_load"> Loading latest dictionary <img src="images/24px-spinner-0645ad.gif"></span>
+
+<!-- ==================================== -->
+<h2>Paste Your HTML Text Here</h2>
+<p><i>Have an MS Word document? Try this service: <a href="http://word2cleanhtml.com" target="_blank">http://word2cleanhtml.com</a> </i></p>
+
+<textarea type="textbox" id="textinput">
+<p> This is some sample text with bad diacriticals: Ahmad, Baghdad, Fath-Ali and Baqi. Notice that the dictionary uses _sh to indicate an underscore. Also, notice that the dictionary is case sensitive but the replacement system is still smart enough to deal with ALLCAP words like AHMAD. The dictionary ideally should have multiple versions of each word in order to help weed out misspellings. (Notice one of the spellings of Ahmad is wrong in the dictionary but the word is still corrected correctly.)
+
+<p> MUHIT-I-SHÁ'IR-I-KIRMANI: Lorem ipsum dolor sit Abul-Fadl, Abu'l-Fadl et "Abu'l-Fadl" elit, sed do Ahsanu’l-Qisas tempor incididunt ut Baghdad et dolore magna Baqi. Ut Baqir-i-Ra<u>sh</u>tí ad minim Fath-'Ali, quis Ismá'il-i-<u>Dh</u>abíh exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+
+<p> Duis aute Fátimih dolor in Shadíd in voluptate velit esse cillum dolore eu fugiat nulla pariatur. 'Abdu’l-Khaliq-i-Yazdi sint 'Abdu'l-Kháliq-i-Yazdi et Siyyidu'<u>sh</u>-<u>Sh</u>uhadá non proident, sunt in Askarí qui ‘Askarí or "Askari" Mihdíy-i-<u>Kh</u>u'í mollit
+<u>Sh</u>aykhis id <u>Sh</u>aykh Abdu'l-<u>Kh</u>álíq-i-Yazdi. Lorem ipsum '‘Abbás' sit ‘Abbás,". 'Abbas's adipisicing elit, sed do"Siyyidu’sh-Shuhadá‘" tempor incididunt ut Dhi'l-Qa'dih et dolore magna <u>Sh</u>íráz.
+</textarea>
+
+<br><h3> Select output style </h3>
+
+<input type="radio" name="report_option" value="" checked>Auto Correct &nbsp; |
+<input type="radio" name="report_option" value="showall">Show All  &nbsp; |
+<input type="radio" name="report_option" value="suggest">Suggest
+
+<input type="button" value="Generate Report" id="go_button" disabled />
+
+<br><br>
+<div id="report_output"><br><br><br></div>
+
+
+<br><br><br>
+
+</section>
+
+      </div>
+    </div>
+
+
+  </body>
+
+
+  <script src="//code.jquery.com/jquery-2.1.0.min.js"></script>
+  <script src="../diacritical.js"></script>
+
+  <script type="text/javascript">
+    $(function(){
+      var accents_url = '//diacritics.iriscouch.com/accents/_design/terms_list/_view/terms_list';
+      var wordlist = [];
+      $.getJSON( accents_url, function( data ) {
+        var total = data.total_rows;
+        var list = data.rows;
+        $.each(data.rows, function(index) {
+          wordlist.push(data.rows[index]['key']);
+        });
+        $('#dictionary_load').html("Current dictionary loaded with <b><i>"+ wordlist.length + "</i></b> items.");
+        $('#go_button').removeAttr("disabled").click(accents_replace);
+        window.wordlist = wordlist;
+      });
+    });
+
+    // ok, just a little test bed for HTML conversion
+    var accents_replace = function(){
+      var diacritical = new Diacritical();
+      var dictionary = window.wordlist;
+    console.log("Dictionary has "+ dictionary.length + " terms.");
+      var bad_text = $('#textinput').val();
+      var option = $('input[name=report_option]:radio:checked').attr('value');
+      var report = {}; // must pass in an object to get a report back
+      var fixed_text = diacritical.replaceText(bad_text, dictionary, option, report);
+      var legend =  "<div class='legend'> "+
+        "<mark class='term correct'>Correct Term</mark> <br>"+
+        "<mark class='term misspelled'>Misspelled</mark> <br>"+
+        "<mark class='term correction'>Suggestion</mark> <br>"+
+        "<mark class='term unknown'>Unknown Term</mark> </div>";
+      var htmlreport = " <h3>JSON Report:</h3> <pre class='report'>" + JSON.stringify(report, undefined, 2) + "</pre> ";
+      var html = option==='showall' ? legend + fixed_text + htmlreport : fixed_text;
+      $('#report_output').html(html);
+    };
+
+    </script>
+</html>

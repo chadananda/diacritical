@@ -1,5 +1,5 @@
 # Diacriṭícál
-_Transliteration-Dictionary Suggestion Script_
+_Bahá’í Term Suggestion Script_
 
 ### Home Page: http://chadananda.github.io/diacritical
 

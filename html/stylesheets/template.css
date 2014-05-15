@@ -38,8 +38,9 @@
 
 span.pagenum:after {
   content: attr(data-num);
-  padding: 5px; color: silver; font-size: 12pt;
+  padding: 5px; color: white; font-size: 10pt;
   border: 1px solid silver; border-radius: 3px; margin: 5px; margin-top:-1em;
+  background-color: gray;
 
 }
 

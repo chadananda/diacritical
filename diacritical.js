@@ -291,10 +291,10 @@ Diacritical.prototype.tokenizeString = function(str, type) {
   // =====================================
   function tokenInfo(token) {
     var info = {class: []};
-    // now determine if word is allcaps
-    info.isAllCaps = (token.word === token.word.toUpperCase());
     // now generate base version
     info.stripped = self.term_strip_alpha(token.word);
+    // now determine if word is allcaps
+    info.isAllCaps = (info.stripped === info.stripped.toUpperCase());
 
     //info.lookup = info.stripped.substr(0,3).toLowerCase();
     info.isPossibleTerm = self.isPossibleTerm(token.word);
@@ -302,6 +302,8 @@ Diacritical.prototype.tokenizeString = function(str, type) {
     info.glyph = self.HTML2glyph(token.word);
     info.ansi = self.glyph2ANSI(info.glyph);
     info.soundex = self.soundex(info.ansi);
+
+
     //if (info.isPossibleTerm) info.class = ['term'];
     return info;
   }
@@ -339,6 +341,8 @@ Diacritical.prototype.rebuildBlock = function(tokens, options, dictionary) {
     tokens = self.tokenizeString(tokens);
     if (dictionary) self.addTermSuggestions(tokens, dictionary);
   }
+
+ // console.log(tokens);
 
   var words = [], newword;
   tokens.forEach(function(token) {
@@ -436,18 +440,26 @@ Diacritical.prototype.addTermSuggestions = function(tokens, dictionary, report) 
 
   // ---------------------------------------------
   function dictionarySuggestion(token) {
+
+    //console.log("dictionarySuggestion(token)", token);
+
     var matchCase = token.info.stripped,
         matchLower = token.info.stripped.toLowerCase(),
         suggestion,
         possibilities,
         result = false;
+
+    //console.log(matchLower, dictionary);
+
     if (matchLower in dictionary) {
+      //console.log("shiah in dictionary ");
       possibilities = dictionary[matchLower];
+      //console.log("possibilities", possibilities);
       if (token.info.isAllCaps) {// case insensitive -- just take the first one
         suggestion = possibilities[Object.keys(possibilities)[0]];
         result = {
           glyph: suggestion.glyph.toUpperCase(),
-          html: suggestion.html.toUpperCase(),
+          html: suggestion.html.toUpperCase().replace(/<U>/g,'<u>').replace(/<\/U>/g,'</u>'),
           stripped: suggestion.stripped.toUpperCase(),
           ansi: suggestion.ansi.toUpperCase(),
           isMisspelled: (token.info.glyph != suggestion.glyph.toUpperCase()),

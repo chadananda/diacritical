@@ -22,6 +22,14 @@
        expect(d.tokenizeString(test_text).length).toEqual(2);
     });
 
+    it("Tokenized HTML string should be marked isAllCaps", function() {
+       var test_text = "  <u>SH</u>Í’AH  <span>MUHÍT-I-SHÁ'IR-I-KIRMANÍ'S</span>: 'A<u>bu</u>’l-Fàdl',  ";
+       var tokens = d.tokenizeString(test_text);
+       expect(tokens[0].info.isAllCaps).toEqual(true);
+       expect(tokens[1].info.isAllCaps).toEqual(true);
+       expect(tokens[2].info.isAllCaps).toEqual(false);
+    });
+
 
     it("Tokens should rejoin into the exact same string.", function() {
        var test_text = "    MUHÍT-I-SHÁ'IR-I-KIRMANÍ'S: 'Abu’l-Fàdl', ";
@@ -190,6 +198,7 @@
 
   describe("Suggestion Generator", function() {
 
+
     it("Correctly replace All CAPS using verbose method", function() {
        var report = {},
            text = "AHMAD, ahmad, Ahmad, AHMAD'S";
@@ -202,19 +211,36 @@
 
     it("Correctly replace All CAPS using brief method", function() {
        var text = "AHMAD, ahmad, Ahmad, AHMAD'S";
-       var newText = d.replaceText(text, getTestDictionaryList(), 'clean');
+       var newText = d.replaceText(text, dictionary, 'clean');
        expect(newText).toEqual("AḤMAD, aḥmad, Aḥmad, AḤMAD'S");
     });
 
+
+
+    it("Mark 'correction' All CAPS term when underscore HTML is present", function() {
+       var text = "<u>SH</u>Í’AH";
+       //var dictionary = ['_Shí‘ah'];
+       var newText = d.replaceText(text, dictionary, 'suggest');
+       expect(newText).toEqual("<mark class='term correction'><u>SH</u>Í‘AH</mark>");
+    });
+
+    it("Mark 'correct' All CAPS term when underscore HTML is present", function() {
+       var text = "<u>SH</u>Í‘AH";
+       var newText = d.replaceText(text, dictionary, 'suggest');
+       expect(newText).toEqual("<mark class='term correct'><u>SH</u>Í‘AH</mark>");
+    });
+
+
+
     it("Correctly replace suggestions with term tags", function() {
        var text = "AHMAD, ahmad";
-       var newText = d.replaceText(text, getTestDictionaryList(), 'suggest');
+       var newText = d.replaceText(text, dictionary, 'suggest');
        expect(newText).toEqual("<mark class='term correction'>AḤMAD</mark>, <mark class='term correction'>aḥmad</mark>");
     });
 
     it("Correctly replace suggestions with term tags showing all misspellings", function() {
        var text = "Ahmad";
-       var newText = d.replaceText(text, getTestDictionaryList(), 'showall');
+       var newText = d.replaceText(text, dictionary, 'showall');
        expect(newText).toEqual("<mark class='term misspelled'>Ahmad</mark> <mark class='term correction'>Aḥmad</mark>");
     });
 
@@ -278,7 +304,7 @@ var getTestDictionaryList = function() {
     '_Shay_kh',
     '_Shay_khí',
     '_Shay_khís',
-    'shí‘ah',
+    '_shí‘ah',
     '‘Abbás',
     '‘Abdu’l-_Kháliq-i-Yazdí',
     '‘Askarí'

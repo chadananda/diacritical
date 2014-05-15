@@ -160,6 +160,15 @@
     });
 
 
+    it("Correctly determine words with 'e's are not terms", function() {
+       var report = {},
+           text = " l’Asie ";
+       var tokens = d.tokenizeString(text);
+       d.addTermSuggestions(tokens, dictionary, report);
+       expect(report.unknownTotal).toEqual(0);
+    });
+
+
   });
 
 
@@ -215,8 +224,6 @@
        expect(newText).toEqual("AḤMAD, aḥmad, Aḥmad, AḤMAD'S");
     });
 
-
-
     it("Mark 'correction' All CAPS term when underscore HTML is present", function() {
        var text = "<u>SH</u>Í’AH";
        //var dictionary = ['_Shí‘ah'];
@@ -229,8 +236,6 @@
        var newText = d.replaceText(text, dictionary, 'suggest');
        expect(newText).toEqual("<mark class='term correct'><u>SH</u>Í‘AH</mark>");
     });
-
-
 
     it("Correctly replace suggestions with term tags", function() {
        var text = "AHMAD, ahmad";

@@ -155,9 +155,8 @@ Diacritical.prototype.isPossibleTerm = function(token) {
   //  first, remove any tags
   var src = token.replace(/(<([^>]+)>)/ig, '')
   // next, remove all not allowed characters
-  var modified = src.replace(/[^a-zA-ZáÁíÍúÚḤḥḌḍṬṭẒẓṢṣ\’\‘\'\`\-]/g, '');
+  var modified = src.replace(/[^a-zA-ZáÁíÍúÚḤḥḌḍṬṭẒẓṢṣ\’\‘\'\`\-]/g, '').replace(/[eo]/g, '');
   // if no change after deleting not allowed characters, this might be a term
-
   return (src === modified);
 };
 

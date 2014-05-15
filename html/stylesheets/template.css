@@ -35,8 +35,8 @@
       }
       .hidden {display:none;}
 
-span.pagenum:content {
-  attr(data-num);
+span.pagenum:after {
+  content: attr(data-num);
   padding: 5px; color: silver; font-size: 6pt; vertical-align: super;
 }
 

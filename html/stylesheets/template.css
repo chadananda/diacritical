@@ -2,7 +2,7 @@
       #go_button {padding: 1em !important; font-size: 22pt; font-family: arial; height: 2em; float:right;}
 
       mark.term {background: none; border: 1px solid silver; border-radius:3px;}
-      mark.term.correct:after {content: " \2713"; color: #009900; font-size: .5em;}
+      mark.term.correct:after {content: " \2713 "; color: #009900; font-size: .75em;}
       mark.term.correction {text-shadow: 0px 0px .3em rgba(255,230,0,.5); }
       mark.term.misspelled {text-decoration: line-through; border: 0;}
       mark.term.unknown  {text-shadow: 0px 0px .3em rgba(100,149,237,.8);}
@@ -37,7 +37,7 @@
       .hidden {display:none;}
 
 span.pagenum:after {
-  content: attr(data-num);
+  content: "pg." attr(data-num);
   padding: 2px; color: white; font-size: 10pt;
   border: 1px solid silver; border-radius: 5px; margin: 5px; margin-top:-2em;
   background-color: gray;

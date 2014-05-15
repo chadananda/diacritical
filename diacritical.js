@@ -139,8 +139,15 @@ Diacritical.prototype.HTML2glyph = function(term) {
 
 Diacritical.prototype.isPossibleTerm = function(token) {
   var self = this;
-  var glyph = self.term_strip_alpha(token);
-  if (glyph.length<2) return false;
+
+  // stripped down version must be at least two characters
+  if (self.term_strip_alpha(token).length<2) return false;
+
+  // word must contain some non-normal characters beside just one dash
+  var modified = token.replace(/[^a-zA-Z]/g, '');
+  if (modified === '-') return false;
+
+
   // first, see if it has our special characters
   if (token.search(/[áÁíÍúÚḤḥḌḍṬṭẒẓṢṣ\’\‘\'\`\-]/g) === -1) return false;
   // next, remove illegal characters and see if anything changed
@@ -149,6 +156,8 @@ Diacritical.prototype.isPossibleTerm = function(token) {
   // next, remove all not allowed characters
   var modified = src.replace(/[^a-zA-ZáÁíÍúÚḤḥḌḍṬṭẒẓṢṣ\’\‘\'\`\-]/g, '');
   // if no change after deleting not allowed characters, this might be a term
+
+
   return (src === modified);
 };
 

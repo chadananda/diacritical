@@ -144,10 +144,10 @@ Diacritical.prototype.isPossibleTerm = function(token) {
   if (self.term_strip_alpha(token).length<2) return false;
 
   // word must contain some non-normal characters beside just one dash
-  var modified = token.replace(/[^a-zA-Z]/g, '');
-  if (modified === '-') return false;
+  //var modified = token.replace(/[a-zA-Z]/g, '');
+  if (token.replace(/[a-zA-Z]/g, '') === '-') return false;
 
-//console.log(modified);
+//if (modified.indexOf('-')>-1) console.log(modified);
 
   // first, see if it has our special characters
   if (token.search(/[áÁíÍúÚḤḥḌḍṬṭẒẓṢṣ\’\‘\'\`\-]/g) === -1) return false;

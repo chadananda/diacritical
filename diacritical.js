@@ -147,9 +147,11 @@ Diacritical.prototype.isPossibleTerm = function(token) {
   var modified = token.replace(/[^a-zA-Z]/g, '');
   if (modified === '-') return false;
 
+console.log(modified);
 
   // first, see if it has our special characters
   if (token.search(/[áÁíÍúÚḤḥḌḍṬṭẒẓṢṣ\’\‘\'\`\-]/g) === -1) return false;
+
   // next, remove illegal characters and see if anything changed
   //  first, remove any tags
   var src = token.replace(/(<([^>]+)>)/ig, '')

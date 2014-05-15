@@ -12,7 +12,19 @@ Formatting Bahá’í electronic texts is a pain. Even the best quality electron
 
 This project attempts to address that fundamental problem by providing an automated replacement and suggestion system which can utilize a dictionary of authoritatively spelled terms.
 
+#### Some Examples:
 
+See how many errors the current dictionary can find in some reference.bahai.org books:
+
+* http://chadananda.github.io/diacritical/html/report-Advent.html
+* http://chadananda.github.io/diacritical/html/report-Dawn-Breakers.html
+* http://chadananda.github.io/diacritical/html/report-GPB.html
+* http://chadananda.github.io/diacritical/html/report-Advent.html
+* http://chadananda.github.io/diacritical/html/report-Gleanings.html
+* http://chadananda.github.io/diacritical/html/report-Kitab-i-Iqan.html
+* http://chadananda.github.io/diacritical/html/report-PDC.html
+* http://chadananda.github.io/diacritical/html/report-WOB.html
+* http://chadananda.github.io/diacritical/html/report-Summons.html
 
 
 

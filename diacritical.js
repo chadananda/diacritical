@@ -138,6 +138,9 @@ Diacritical.prototype.HTML2glyph = function(term) {
 };
 
 Diacritical.prototype.isPossibleTerm = function(token) {
+  var self = this;
+  var glyph = self.term_strip_alpha(token);
+  if (glyph.length<2) return false;
   // first, see if it has our special characters
   if (token.search(/[áÁíÍúÚḤḥḌḍṬṭẒẓṢṣ\’\‘\'\`\-]/g) === -1) return false;
   // next, remove illegal characters and see if anything changed

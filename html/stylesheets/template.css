@@ -2,6 +2,7 @@
       #go_button {padding: 1em !important; font-size: 22pt; font-family: arial; height: 2em; float:right;}
 
       mark.term {background: none; border: 1px solid silver; border-radius:3px;}
+      mark.term.correct:after {content: " \2713";}
       mark.term.correction {text-shadow: 0px 0px .3em rgba(255,230,0,.5); }
       mark.term.misspelled {text-decoration: line-through; border: 0;}
       mark.term.unknown  {text-shadow: 0px 0px .3em rgba(100,149,237,.8);}
@@ -36,7 +37,7 @@
       .hidden {display:none;}
 
 span.pagenum:after {
-  content: attr(data-num);
+  content: attr('data-num');
   padding: 5px; color: silver; font-size: 6pt; vertical-align: super;
 }
 

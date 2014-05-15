@@ -135,6 +135,23 @@
        expect(tokens[0].prefix).toEqual("  \t\n\n<p>\t <pre>");
     });
 
+    it("Correctly recognize dashed words are not a term", function() {
+       var report = {},
+           text = "well-being";
+       var tokens = d.tokenizeString(text);
+       d.addTermSuggestions(tokens, dictionary, report);
+       expect(report.unknownTotal).toEqual(0);
+    });
+
+    it("Correctly recognize words with start and end single quots are not terms", function() {
+       var report = {},
+           text = "'dog pet'";
+       var tokens = d.tokenizeString(text);
+       d.addTermSuggestions(tokens, dictionary, report);
+       expect(report.unknownTotal).toEqual(0);
+    });
+
+
   });
 
 

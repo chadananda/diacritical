@@ -273,12 +273,28 @@ Diacritical.prototype.tokenizeString = function(str, type) {
       token.word = tt[2];
       token.suffix = tt[3] + token.suffix;
     }
-    // now patern match to remove 's and any other similar suffix
-    regex = /^(.*)([\’\‘\'\`]s)$/img;
-    if (tt = regex.exec(token.word)) {
-      token.word = tt[1];
-      token.suffix = tt[2] + token.suffix;
+
+    // we need to move these into an array or language-specific
+
+    // Remove 's and any other similar suffix
+    if (tt = /^(.*)([\’\‘\'\`]s)$/img.exec(token.word)) {
+      token.word = tt[1]; token.suffix = tt[2] + token.suffix;
     }
+
+
+    // remove Romanian suffixes
+    ['-ul','-ului', '-ii', '-uri'].forEach(function(suffix) {
+      suffix = suffix.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&'); // a regexp escape
+      var re = new RegExp('^(.*)('+suffix+')$', 'img');
+      if (tt = re.exec(token.word)) {
+        token.word = tt[1]; token.suffix = tt[2] + token.suffix;
+      }
+    });
+
+
+
+
+
     // for each word, add some additional info
     token.info = tokenInfo(token);
     // replace list item with updated object

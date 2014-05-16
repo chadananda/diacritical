@@ -22,7 +22,7 @@
 
 
         var report_html = "<h2> Total Confirmed Corrections: <mark class='term correction'> &nbsp;" +
-          report.correctedTotal + "&nbsp;</mark></h2><h2> Questionable terms: <mark class='term unknown'>&nbsp;" +
+          report.correctedTotal + "&nbsp;</mark></h2><h2> Suspect terms: <mark class='term unknown'>&nbsp;" +
           report.unknownTotal +"&nbsp;</mark></h2";
         $('#report_output div.content').html(html);
         $('#report_output div.report').html(report_html);

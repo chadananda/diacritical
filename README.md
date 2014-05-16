@@ -15,8 +15,7 @@ This project attempts to address that fundamental problem by providing an automa
 #### Some Examples:
 
 See how many errors the current dictionary can find in some reference.bahai.org books:
-
-* http://chadananda.github.io/diacritical/html/report-Advent.html
+ 
 * http://chadananda.github.io/diacritical/html/report-Dawn-Breakers.html
 * http://chadananda.github.io/diacritical/html/report-GPB.html
 * http://chadananda.github.io/diacritical/html/report-Advent.html

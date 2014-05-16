@@ -283,7 +283,7 @@ Diacritical.prototype.tokenizeString = function(str, type) {
 
 
     // remove Romanian suffixes
-    ['-ul','-ului', '-ii', '-uri', ,'-ilor', '-ismului', '-i', 'lor', 'ului', 'atul'].forEach(function(suffix) {
+    ['-ul','-ului', '-ii', '-uri', ,'-ilor', '-ismului', '-i', 'ilor', 'lor', 'ului', 'atul', 'ul'].forEach(function(suffix) {
       suffix = suffix.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&'); // a regexp escape
       var re = new RegExp('^(.*)('+suffix+')$', 'img');
       if (tt = re.exec(token.word)) {

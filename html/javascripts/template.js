@@ -15,11 +15,10 @@
 
         // process text
         var diacritical = new Diacritical();
-        var fixed_text = diacritical.replaceText(text, wordlist, 'showall', report);
-        var suggested_text = diacritical.replaceText(text, wordlist, 'suggest');
-        var suggested_html = "\n\n<textarea class='suggest_text'>"+ suggested_text + "</textarea>";
-        var htmlreport = " <h3>JSON Report:</h3> <pre class='report'>" + JSON.stringify(report, undefined, 2) + "</pre> ";
-        var html = fixed_text + htmlreport + suggested_html;
+        var html = diacritical.replaceText(text, wordlist, 'showall', report) +
+          " <h3>JSON Report:</h3> <pre class='report'>" + JSON.stringify(report, undefined, 2) + "</pre> " +
+          "\n\n Suggested: <textarea class='suggest_text'>"+ diacritical.replaceText(text, wordlist, 'suggest') + "</textarea>"+
+          "\n\n clean: <textarea class='suggest_text'>"+ diacritical.replaceText(text, wordlist, 'clean') + "</textarea>";
 
 
         var report_html = "<h2> Total Confirmed Corrections: <mark class='term correction'> &nbsp;" +

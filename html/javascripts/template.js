@@ -3,6 +3,10 @@
       var wordlist = [];
       $('#dictionary_load').html('<span class="blink">Loading latest dictionary...</span> <img src="images/24px-spinner-0645ad.gif">');
       $.getJSON( accents_url, function( data ) {
+
+console.log(data);
+return;
+
         var total = data.total_rows;
         var list = data.rows;
         $.each(data.rows, function(index) {

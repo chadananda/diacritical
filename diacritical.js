@@ -392,6 +392,7 @@ Diacritical.prototype.rebuildBlock = function(tokens, options, dictionary) {
 
 
 Diacritical.prototype.soundex = function(s) {
+  if (!s) return '';
   var a = s.toLowerCase().split('')
      f = a.shift(),
      r = '',

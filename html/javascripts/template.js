@@ -4,8 +4,8 @@
       $('#dictionary_load').html('<span class="blink">Loading latest dictionary...</span> <img src="images/24px-spinner-0645ad.gif">');
       $.getJSON( accents_url, function( data ) {
 
-console.log(data);
-return;
+        //console.log(data);
+
 
         var total = data.total_rows;
         var list = data.rows;
@@ -20,9 +20,9 @@ return;
         // process text
         var diacritical = new Diacritical();
         var html = diacritical.replaceText(text, wordlist, 'showall', report) +
-          " <h3>JSON Report:</h3> <pre class='report'>" + JSON.stringify(report, undefined, 2) + "</pre> " +
-          "\n\n Suggested: <textarea class='suggest_text'>"+ diacritical.replaceText(text, wordlist, 'suggest') + "</textarea>"+
-          "\n\n clean: <textarea class='suggest_text'>"+ diacritical.replaceText(text, wordlist, 'clean') + "</textarea>";
+          " <h3>JSON Report:</h3> <pre class='report'>" + JSON.stringify(report, undefined, 2) + "</pre> ";
+         // "\n\n Suggested: <textarea class='suggest_text'>"+ diacritical.replaceText(text, wordlist, 'suggest') + "</textarea>"+
+         // "\n\n clean: <textarea class='suggest_text'>"+ diacritical.replaceText(text, wordlist, 'clean') + "</textarea>";
 
 
         var report_html = "<h2> Total Confirmed Corrections: <mark class='term correction'> &nbsp;" +

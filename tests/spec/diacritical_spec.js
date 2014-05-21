@@ -273,6 +273,12 @@
        expect(d.replaceText('Ahmad', dictionary)).toEqual('Aḥmad');
     });
 
+    it("Correctly replace words with interior incorrect caps", function() {
+       var text = "AhmAd, Kitáb-I-Iqán";
+       var newText = d.replaceText(text, dictionary, 'clean');
+       expect(newText).toEqual("Aḥmad, Kitáb-i-Íqán");
+    });
+
   });
 
 
@@ -312,6 +318,7 @@ var getTestDictionaryList = function() {
     '_shí‘ah',
     '‘Abbás',
     '‘Abdu’l-_Kháliq-i-Yazdí',
-    '‘Askarí'
+    '‘Askarí',
+    'Kitáb-i-Íqán'
   ];
 };

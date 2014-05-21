@@ -455,6 +455,9 @@ Diacritical.prototype.addTermSuggestions = function(tokens, dictionary, report) 
   });
 
   // ---------------------------------------------
+  function isProperCase(word) {
+    return ((word.length>0) && (word.split('')[0]===word.split('')[0].toUpperCase()));
+  }
   function dictionarySuggestion(token) {
 
     //console.log("dictionarySuggestion(token)", token);
@@ -479,7 +482,8 @@ Diacritical.prototype.addTermSuggestions = function(tokens, dictionary, report) 
           stripped: suggestion.stripped.toUpperCase(),
           ansi: suggestion.ansi.toUpperCase(),
           isMisspelled: (token.info.glyph != suggestion.glyph.toUpperCase()),
-          soundex: self.soundex(suggestion.ansi.toUpperCase())
+          soundex: self.soundex(suggestion.ansi.toUpperCase()),
+          type: "All-Caps match"
         };
       } else if (matchCase in possibilities) {
         // Case sensitive, check for an exact match
@@ -490,8 +494,30 @@ Diacritical.prototype.addTermSuggestions = function(tokens, dictionary, report) 
           stripped: suggestion.stripped,
           ansi: suggestion.ansi,
           isMisspelled: (token.info.glyph != suggestion.glyph),
-          soundex: self.soundex(suggestion.ansi)
+          soundex: self.soundex(suggestion.ansi),
+          type: "exact case match"
         };
+      } else {
+        // not all-caps and exact case match is not found
+          // so we take the first match that at least matches case on the first letter
+          //
+          //
+          // ooops, this is not an array
+        for (var key in possibilities) {
+          var suggestion = possibilities[key];
+          if (!result && isProperCase(matchCase)===isProperCase(suggestion.stripped)) {
+            result = {
+              glyph: suggestion.glyph,
+              html: suggestion.html,
+              stripped: suggestion.stripped,
+              ansi: suggestion.ansi,
+              isMisspelled: (token.info.glyph != suggestion.glyph),
+              soundex: self.soundex(suggestion.ansi),
+              type: "inexact case match"
+            };
+          }
+          console.log("Inexact case match: " + result.html);
+        }
       }
     }
     //console.log('token', token);

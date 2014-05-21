@@ -285,7 +285,7 @@ Diacritical.prototype.tokenizeString = function(str, type) {
 
 
     // remove Romanian suffixes -- , 'ul'
-    ['-ul','-ului', '-ii', '-uri', ,'-ilor', '-ismului', '-smului', '-i', 'ilor', 'lor', 'ului' ,'atul'].forEach(function(suffix) {
+    ['-ul','-ului','-ii','-uri','-ilor','-la','-ua','-ismului','-smului','-i','ilor','lor','ului','atul'].forEach(function(suffix) {
       suffix = suffix.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&'); // a regexp escape
       var re = new RegExp('^(.*)('+suffix+')$', 'img');
       if (tt = re.exec(token.word)) {
@@ -293,8 +293,12 @@ Diacritical.prototype.tokenizeString = function(str, type) {
       }
     });
 
-
-
+    // remove Romanian lower-case prefixes such as "din" or "la", "lui"
+    var regex = /^([a-z]+)([\_\’\‘\'\`]*?[A-Z]+.*?)$/mg;
+    if ((tt = regex.exec(token.word))  &&  (['din','la','lui','un'].indexOf(tt[1])>-1) ) {
+      token.prefix = token.prefix + tt[1];
+      token.word = tt[2];
+    }
 
 
     // for each word, add some additional info
@@ -517,7 +521,7 @@ Diacritical.prototype.addTermSuggestions = function(tokens, dictionary, report) 
               soundex: self.soundex(suggestion.ansi),
               type: "inexact case match"
             };
-            console.log("Inexact case match: " + result.html);
+            //console.log("Inexact case match: " + result.html);
           }
         }
       }

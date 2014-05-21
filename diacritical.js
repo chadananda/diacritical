@@ -515,8 +515,8 @@ Diacritical.prototype.addTermSuggestions = function(tokens, dictionary, report) 
               soundex: self.soundex(suggestion.ansi),
               type: "inexact case match"
             };
+            console.log("Inexact case match: " + result.html);
           }
-          console.log("Inexact case match: " + result.html);
         }
       }
     }

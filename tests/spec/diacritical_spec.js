@@ -282,15 +282,17 @@
     it("Correctly identify lower case prefixes on otherwise capitalized words (latin languages)", function() {
        var text = "unAhmad, laKitáb-i-Iqán, dinBaha, lui'Abbas";
        var newText = d.replaceText(text, dictionary, 'clean');
-
-//console.log("text",text);
-
-//console.log("newText", newText);
-
        expect(newText).toEqual("unAḥmad, laKitáb-i-Íqán, dinBahá, lui‘Abbás");
     });
 
 
+
+    it("Do not gather awkward terms when already in dictionary", function() {
+       var dictionary = d.prepareDictionary(['_Sharí‘at-Madár','Aḥmad','Aḥsanu’l-Qiṣaṣ']);
+       var report = {}, text = "<u>Sh</u>arí‘at-Madár";
+       var newText = d.replaceText(text, dictionary, 'clean', report);
+       expect(report.unknownTotal).toEqual(0);
+    });
 
   });
 
@@ -333,6 +335,7 @@ var getTestDictionaryList = function() {
     '‘Abbás',
     '‘Abdu’l-_Kháliq-i-Yazdí',
     '‘Askarí',
-    'Kitáb-i-Íqán'
+    'Kitáb-i-Íqán',
+    '_Sharí‘at-Madár'
   ];
 };

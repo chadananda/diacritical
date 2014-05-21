@@ -96,9 +96,11 @@ Diacritical.prototype.term_strip_alpha = function(word) {
     // remove all HTML tags
     .replace(/<\/?\w+((\s+\w+(\s*=\s*(?:".*?"|'.*?'|[^'">\s]+))?)+\s*|\s*)\/?>/g, '')
 
-
-    // delete quotes and line unders and dashes
+    // delete quotes and line unders
     .replace(/[\’\‘\'\`\_]/g, '')
+
+    // delete dashes
+    .replace(/[\-]/g, '')
 
     .trim(); // just in case
 };

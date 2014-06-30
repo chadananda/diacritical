@@ -479,3 +479,23 @@ footer a:hover {
 @media only screen and (max-width: 479px) {}
 
 
+p, aside {
+  padding-top:0;
+  margin: 1em; margin-left: 2em;
+  line-height: 1.25em;
+  text-align:justify;
+  text-justify:distribute;
+  position: relative;
+  text-indent: .25em;
+}
+p::before {
+    content: attr(id);
+    font-size: .75em;
+    color:gray;
+    vertical-align:top;
+    float: left;
+    position: absolute;
+    top: 0; left: -2.5em;
+}
+
+

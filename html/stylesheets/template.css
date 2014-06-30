@@ -48,5 +48,15 @@ span.pagenum:after {
 
 .suggest_text {width: 2em; height: 1em;}
 
+p::before {
+    content: attr(id);
+    font-size: .75em;
+    color:gray;
+    vertical-align:top;
+    float: left;
+    position: absolute;
+    top: 0; left: -2.5em;
+}
+
 
 

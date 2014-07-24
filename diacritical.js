@@ -340,7 +340,7 @@ Diacritical.prototype.replaceText = function(text, dictionary, options, report) 
   dictionary = self.prepareDictionary(dictionary);
  //console.log('dictionary',dictionary);
   self.addTermSuggestions(tokens, dictionary, report);
-  //console.log('report', report);
+//console.log('report', report);
   result = self.rebuildBlock(tokens, options);
  // console.log('result', result);
   return result;
@@ -433,10 +433,16 @@ Diacritical.prototype.addTermSuggestions = function(tokens, dictionary, report) 
       term,
       allcaps,
       is_match = false,
-      suggestion;
+      suggestion,
+      corrected;
 
-  report.unknowns = []; report.corrected = [];
-  report.unknownTotal = 0; report.correctedTotal = 0;
+  if (!report.unknowns) report.unknowns = [];
+  if (!report.corrected) report.corrected = [];
+  if (!report.replacements) report.replacements = [];
+  //report.unknownTotal = 0; report.correctedTotal = 0;
+  report.blockCount = (report.blockCount ? report.blockCount +1 : 1);
+  report.unknownTotal = (report.unknownTotal ? report.unknownTotal : 0);
+  report.correctedTotal = (report.correctedTotal ? report.correctedTotal : 0);
 
   dictionary = self.prepareDictionary(dictionary); //safe to call muliple times
   dictionary = dictionary.terms;
@@ -450,9 +456,11 @@ Diacritical.prototype.addTermSuggestions = function(tokens, dictionary, report) 
       // report misspelled corrections
       if (token.suggestion.isMisspelled) {
         report.correctedTotal++;
-        if (report.corrected.indexOf(suggestion.glyph) == -1) report.corrected.push(suggestion.glyph);
-      } else token.suggestion.inDictionary = true;
+        var replacement = {token.word: suggestion.html};
 
+        if (report.corrected.indexOf(suggestion.glyph) == -1) report.corrected.push(suggestion.glyph);
+        if (report.replacements.indexOf(replacement) == -1) report.replacments.push(replacement);
+      } else token.suggestion.inDictionary = true;
     } else if (token.info.isPossibleTerm) { // report unknown terms with no dictionary match
       report.unknownTotal++;
       if (report.unknowns.indexOf(token.word) === -1) report.unknowns.push(token.word);
@@ -510,7 +518,7 @@ Diacritical.prototype.addTermSuggestions = function(tokens, dictionary, report) 
           //
           // ooops, this is not an array
         for (var key in possibilities) {
-          var suggestion = possibilities[key];
+          suggestion = possibilities[key];
           if (!result && isProperCase(matchCase)===isProperCase(suggestion.stripped)) {
             result = {
               glyph: suggestion.glyph,

@@ -15,7 +15,7 @@
       }
       .accents-report h4 {margin: 5px; padding: 0; }
       .accents-modified {border: 2px solid gray; margin: 1em; padding: 1em;}
-      #report_output .content {
+      #report_output {
         border: 3px solid darkgray;
         -webkit-box-shadow:inset 2px 3px 5px 2px #BFBFBF;
         box-shadow:inset 2px 3px 5px 2px #BFBFBF;

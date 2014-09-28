@@ -438,7 +438,7 @@ Diacritical.prototype.addTermSuggestions = function(tokens, dictionary, report) 
 
   if (!report.unknowns) report.unknowns = [];
   if (!report.corrected) report.corrected = [];
-  if (!report.replacements) report.replacements = [];
+  if (!report.replacements) report.replacements = {};
   //report.unknownTotal = 0; report.correctedTotal = 0;
   report.blockCount = (report.blockCount ? report.blockCount +1 : 1);
   report.unknownTotal = (report.unknownTotal ? report.unknownTotal : 0);
@@ -453,13 +453,15 @@ Diacritical.prototype.addTermSuggestions = function(tokens, dictionary, report) 
     if (suggestion = dictionarySuggestion(token)) {
       token.suggestion = suggestion;
       token.info.soundex = suggestion.soundex;
+
       // report misspelled corrections
-      if (token.suggestion.isMisspelled) {
+      if (suggestion.isMisspelled) {
         report.correctedTotal++;
-        var replacement = {token.word: suggestion.html};
 
         if (report.corrected.indexOf(suggestion.glyph) == -1) report.corrected.push(suggestion.glyph);
-        if (report.replacements.indexOf(replacement) == -1) report.replacments.push(replacement);
+        if (report.replacements[token.word] == undefined) report.replacements[token.word] = suggestion.html;
+        //console.log(report.replacements[token.word]);
+
       } else token.suggestion.inDictionary = true;
     } else if (token.info.isPossibleTerm) { // report unknown terms with no dictionary match
       report.unknownTotal++;
@@ -539,4 +541,5 @@ Diacritical.prototype.addTermSuggestions = function(tokens, dictionary, report) 
     return result;
   }
 };
+
 

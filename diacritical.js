@@ -1,4 +1,4 @@
-﻿function Diacritical() {}
+function Diacritical() {} 
 
 Diacritical.prototype.prepareDictionary = function(wordList) {
   // exit if this list has already been prepared

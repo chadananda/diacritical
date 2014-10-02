@@ -35,8 +35,7 @@ To get involved, simply contact me at <chadananda@gmail.com>. I'll set up user c
 
 A JSON object containing the current wordlist can be pulled down using this REST URL:
 
-  * http://diacritics.iriscouch.com/accents/_design/terms_list/_view/terms_list?group=true&group_level=1
-
+  * http://diacritics.iriscouch.com/accents/_design/terms_list/_view/terms_list
 
 
 
@@ -70,6 +69,37 @@ var bad_text = "This is some sample text with bad diacriticals: Ahmad, Baghdad, 
 
 var fixed_text = diacritical.replaceText(bad_text, dictionary);
 ```
+
+### Using the Library as a node module
+
+Diacritical is now a node module so you can simply install it in your node project with:
+
+```
+npm install diacritical
+```
+
+Then instantiate a new diacritical object with:
+
+```
+var Diacritical = require('diacritical'),
+    diacritical = new Diacritical;
+```
+
+You'll have to fetch a wordlist like this:
+
+```
+  var accents_url = 'http://diacritics.iriscouch.com/accents/_design/terms_list/_view/terms_list';
+  var dictionary = [];
+  request(accents_url, function (error, response, body) {
+    if (!error && response.statusCode == 200) {
+      var data = JSON.parse(body);
+      for (i = 0; i < data.rows.length; ++i) dictionary.push(data.rows[i]['key']);    
+    } else {
+      console.log("Error Response: " + error);
+    }
+  });
+```    
+    
 
 ### Test harness: http://chadananda.github.io/diacritical/tests
 

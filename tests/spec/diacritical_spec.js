@@ -294,11 +294,28 @@
        expect(report.unknownTotal).toEqual(0);
     });
 
+
+    it("Correctly load full test dictionary", function() {
+       var report = {},
+           text = "AHMAD, Ahmad, AHMAD'S";
+       var dictionary = d.prepareDictionary(ACCENTS_TEST_DICTIONARY);
+       var tokens = d.tokenizeString(text);
+       d.addTermSuggestions(tokens, dictionary, report);
+       var newText = d.rebuildBlock(tokens, 'clean', dictionary);
+       expect(newText).toEqual("AḤMAD, Aḥmad, AḤMAD'S");
+
+       console.log(report);
+    });
+
+
+
   });
 
 
 
 });
+
+
 
 
 var getTestDictionaryList = function() {

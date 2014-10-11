@@ -1,4 +1,4 @@
-function Diacritical() {} 
+function Diacritical() {}
 
 Diacritical.prototype.prepareDictionary = function(wordList) {
   // exit if this list has already been prepared
@@ -6,35 +6,54 @@ Diacritical.prototype.prepareDictionary = function(wordList) {
   //
   //console.log(toString.call(wordList));
 
-  if (toString.call(wordList) != "[object Array]") return wordList;
+  var is_accents_json = ('offset' in wordList); // test to see if this came from the accents db
+
+  if (toString.call(wordList) != "[object Array]" && !is_accents_json) return wordList;
   //if ('terms' in wordList) return wordList;
 
   var self = this,
-      result = {total:0, terms: {}},
-      stripped,
-      lookup,
-      obj;
+      replList = {terms: {}, total: 0};
 
   // this is a raw list so let's remove all duplicates before preparing
   wordList = smartRemoveDuplicates(wordList);
 
+  // now add each word to the replacelist. If word has known mispellings, add each seperately
   wordList.forEach(function(term) {
-    stripped = self.term_strip_alpha(term);
-    lookup = stripped.toLowerCase();
-    obj = {
-      'glyph': term,
-      'html': self.glyph2HTML(term),
-      'stripped': stripped,
-      'lookup': lookup,
-      'ansi': self.glyph2ANSI(term)
-    };
-    if (!result.terms[lookup]) result.terms[lookup] = {};
-    if (!result.terms[lookup][stripped]) {
-      result.terms[lookup][stripped] = obj;
-      result.total++;
-    }
+    // add primary word to replace list
+    addToReplaceList(term.base, term, replList);
+    // add any other known mispellings here
+    if (term.known_mispellings.length>0) term.known_mispellings.forEach(function(known_misspelling) {
+      addToReplaceList(self.term_strip_alpha(known_misspelling), term, replList);
+    });
   });
-  return result;
+
+  //console.log(replList);
+  return replList;
+
+  function addToReplaceList(base, term, replList) {
+    var lookup = base.toLowerCase();
+    // here is where we want to add in our new fields
+    // [ref], original, definition, [alternates], [known_mispellings] and verified
+    var obj = {
+      'glyph'     : term.word,
+      'html'      : self.glyph2HTML(term.word),
+      'stripped'  : base,
+      'lookup'    : lookup,
+      'ansi'      : self.glyph2ANSI(term.word),
+      'ref'       : term.ref,
+      'original'  : term.original,
+      'definition': term.definition,
+      'verified'  : term.verified,
+      'alternates' : term.alternates
+    };
+    // add to list
+    if (!replList.terms[lookup]) replList.terms[lookup] = {};
+    if (!replList.terms[lookup][base]) {
+      replList.terms[lookup][base] = obj;
+      replList.total++;
+    }
+    //console.log(obj);
+  }
 
   // ----------------------------------------
   function smartRemoveDuplicates(words) {
@@ -42,27 +61,57 @@ Diacritical.prototype.prepareDictionary = function(wordList) {
     // but in this case, it is unique to the base (stripped) version
     // and the one unique version returned for each base is the most frequent one
     // create an obect list by stripped base version and count of full version
-    var word ='', base= '', stripped ='', list= {};
+    var is_accents_json = ('offset' in words);
+    if (is_accents_json) words = words.rows;
+    var word ='', stripped ='', list= {}, word_data = {};
+
     words.forEach(function(word) {
-      base = self.term_strip_alpha(word);
+      if (is_accents_json) {
+        word_data = word.value;
+        word = word.key;
+        word_data.word = word;
+        word_data.base = self.term_strip_alpha(word);
+      } else {
+        word_data = {word: word, ref:[], original: '', definition:'', alternates:[], known_mispellings:[], verified: false, base: self.term_strip_alpha(word)};
+      }
+      var base = word_data.base;
       if (!(base in list)) list[base] = {};
-      if (word in list[base]) list[base][word]['count']++;
-       else list[base][word] = {word: word, count: 1};
+      if (word in list[base]) { // increment existing item
+        list[base][word]['count']++;
+        // concat items from this word onto the cumulative list
+        list[base][word]['data']['ref'] = list[base][word]['data']['ref'].concat(word_data.ref);
+        list[base][word]['data']['original'] =  word_data.original?word_data.original:list[base][word]['data']['original'];
+        list[base][word]['data']['definition'] =  word_data.definition?word_data.definition:list[base][word]['data']['definition'];
+        list[base][word]['data']['alternates'] = list[base][word]['data']['alternates'].concat(word_data.alternates);
+        list[base][word]['data']['known_mispellings'] = list[base][word]['data']['known_mispellings'].concat(word_data.known_mispellings);
+        if (word_data.verified) list[base][word]['verified'] = true;
+      } else { // create new entry
+        list[base][word] = {word: word, count: 1};
+        list[base][word]['data'] = word_data;
+        list[base][word].verified = list[base][word].verified || word_data.verified;
+
+      }
     });
+    // here's the problem
+    // our new list has more than just word field. It has the fields
+    // [ref], original, definition, [alternates], [known_mispellings] and verified
 
     // iterate through each list and locate the version with the max, create newlist
-    var newList = [], max, topword, words = {};
+    var newList = [], max, topword, has_verified;
+    words = {};
     for (var index in list) {
       words = list[index];
-      max=0; topword='';
+      max=0; topword=''; has_verified=false;
       for (var index2 in words) {
         word = words[index2];
-        if (word.count>max) {
+        if ((word.count>max && !has_verified) || word.verified) {
           topword = word.word;
           max = word.count;
+          has_verified = true;
         }
       }
-      newList.push(topword);
+     //newList.push(topword);
+       newList.push(list[index][topword]['data']);
     }
     return newList;
   }
@@ -399,7 +448,7 @@ Diacritical.prototype.rebuildBlock = function(tokens, options, dictionary) {
 
 Diacritical.prototype.soundex = function(s) {
   if (!s) return '';
-  var a = s.toLowerCase().split('')
+  var a = s.toLowerCase().split('');
      f = a.shift(),
      r = '',
      codes = {
@@ -414,7 +463,7 @@ Diacritical.prototype.soundex = function(s) {
 
   r = f +
      a
-     .map(function (v, i, a) { return codes[v] })
+     .map(function (v, i, a) { return codes[v]; })
      .filter(function (v, i, a) {
          return ((i === 0) ? v !== codes[f] : v !== a[i - 1]);
      })

@@ -1,36 +1,24 @@
 function Diacritical() {}
 
 Diacritical.prototype.prepareDictionary = function(wordList) {
-  // exit if this list has already been prepared
-  //if (!(wordList instanceof Array)) return wordList;
-  //
-  //console.log(toString.call(wordList));
-
-  var is_accents_json = ('offset' in wordList); // test to see if this came from the accents db
-
-  if (toString.call(wordList) != "[object Array]" && !is_accents_json) return wordList;
-  //if ('terms' in wordList) return wordList;
-
+  // exit is this is already a prepared dictionary object
+  if (('terms' in wordList) && ('total' in wordList)) return wordList;
   var self = this,
-      replList = {terms: {}, total: 0};
-
-  // this is a raw list so let's remove all duplicates before preparing
-  wordList = smartRemoveDuplicates(wordList);
-
+      dictionary = {terms: {}, total: 0};
+  // remove duplicates keeing the verified or most frequent version of each term
+  var terms = removeDuplicateTerms(wordList);
   // now add each word to the replacelist. If word has known mispellings, add each seperately
-  wordList.forEach(function(term) {
-    // add primary word to replace list
-    addToReplaceList(term.base, term, replList);
-    // add any other known mispellings here
+  terms.forEach(function(term) {
+    addToDictionary(term.base, term, dictionary);
     if (term.known_mispellings.length>0) term.known_mispellings.forEach(function(known_misspelling) {
-      addToReplaceList(self.term_strip_alpha(known_misspelling), term, replList);
+      addToDictionary(self.term_strip_alpha(known_misspelling), term, dictionary);
     });
   });
+  return dictionary;
 
-  //console.log(replList);
-  return replList;
+  // =============================
 
-  function addToReplaceList(base, term, replList) {
+  function addToDictionary(base, term, replList) {
     var lookup = base.toLowerCase();
     // here is where we want to add in our new fields
     // [ref], original, definition, [alternates], [known_mispellings] and verified
@@ -56,7 +44,7 @@ Diacritical.prototype.prepareDictionary = function(wordList) {
   }
 
   // ----------------------------------------
-  function smartRemoveDuplicates(words) {
+  function removeDuplicateTerms(words) {
     // given an array of terms, return a de-duplicated array
     // but in this case, it is unique to the base (stripped) version
     // and the one unique version returned for each base is the most frequent one
@@ -92,9 +80,6 @@ Diacritical.prototype.prepareDictionary = function(wordList) {
 
       }
     });
-    // here's the problem
-    // our new list has more than just word field. It has the fields
-    // [ref], original, definition, [alternates], [known_mispellings] and verified
 
     // iterate through each list and locate the version with the max, create newlist
     var newList = [], max, topword, has_verified;
@@ -110,7 +95,7 @@ Diacritical.prototype.prepareDictionary = function(wordList) {
           has_verified = true;
         }
       }
-     //newList.push(topword);
+       //newList.push(topword);
        newList.push(list[index][topword]['data']);
     }
     return newList;
@@ -259,18 +244,21 @@ Diacritical.prototype.splitTokens = function(tokens, delimeter_regex_str) {
   function cleanTokenList(tokens) {
     // remove empty tokens and merge tokens without words
     var prefix = '',
-        newlist = [],
+        shortList = [],
         loc;
     // merge empty tokens pushing prefixes and suffixes forward to next non-empty word
     tokens.forEach(function(token, index) {
       if (token.word.length>0) {
         token.prefix = prefix+token.prefix;
-        newlist.push(token);
+        shortList.push(token);
         prefix = '';
       } else prefix = prefix + token.prefix + token.suffix;
     });
-    if (prefix.length>0) newlist[newlist.length-1].suffix = newlist[newlist.length-1].suffix + prefix;
-    tokens = newlist;
+    if (prefix.length>0) {
+      if (shortList.length>0) shortList[shortList.length-1].suffix = shortList[shortList.length-1].suffix + prefix;
+       else shortList.push({word:'', prefix: prefix, suffix:''});
+    }
+    tokens = JSON.parse(JSON.stringify(shortList));
 
     // TODO: these two should be one loop like /^[\s]+|^[^\s]+[\s]+/gm
     // move back beginning spaces or beginning non-space plus space

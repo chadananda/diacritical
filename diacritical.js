@@ -44,7 +44,7 @@ Diacritical.prototype.prepareDictionary = function(wordList) {
       'original'  : term.original,
       'definition': term.definition,
       'verified'  : term.verified,
-      'alternates' : term.alternates
+      'alternates': term.alternates
     };
     // add to list
     if (!replList.terms[lookup]) replList.terms[lookup] = {};
@@ -487,6 +487,7 @@ Diacritical.prototype.addTermSuggestions = function(tokens, dictionary, report) 
 
   if (!report.unknowns) report.unknowns = [];
   if (!report.corrected) report.corrected = [];
+  if (!report.replacement_details) report.replacement_details = {};
   if (!report.replacements) report.replacements = {};
   //report.unknownTotal = 0; report.correctedTotal = 0;
   report.blockCount = (report.blockCount ? report.blockCount +1 : 1);
@@ -507,7 +508,10 @@ Diacritical.prototype.addTermSuggestions = function(tokens, dictionary, report) 
       if (suggestion.isMisspelled) {
         report.correctedTotal++;
 
-        if (report.corrected.indexOf(suggestion.glyph) == -1) report.corrected.push(suggestion.glyph);
+        if (report.corrected.indexOf(suggestion.glyph) == -1) {
+          report.corrected.push(suggestion.glyph);
+          report.replacement_details[token.word] = suggestion;
+        }
         if (report.replacements[token.word] == undefined) report.replacements[token.word] = suggestion.html;
         //console.log(report.replacements[token.word]);
 
@@ -541,46 +545,36 @@ Diacritical.prototype.addTermSuggestions = function(tokens, dictionary, report) 
       //console.log("possibilities", possibilities);
       if (token.info.isAllCaps) {// case insensitive -- just take the first one
         suggestion = possibilities[Object.keys(possibilities)[0]];
-        result = {
-          glyph: suggestion.glyph.toUpperCase(),
-          html: suggestion.html.toUpperCase().replace(/<U>/g,'<u>').replace(/<\/U>/g,'</u>'),
-          stripped: suggestion.stripped.toUpperCase(),
-          ansi: suggestion.ansi.toUpperCase(),
-          isMisspelled: (token.info.glyph != suggestion.glyph.toUpperCase()),
-          soundex: self.soundex(suggestion.ansi.toUpperCase()),
-          type: "All-Caps match"
-        };
+        result = JSON.parse(JSON.stringify(suggestion));
+
+        result.glyph = result.glyph.toUpperCase();
+        result.html = result.html.toUpperCase().replace(/<U>/g,'<u>').replace(/<\/U>/g,'</u>');
+        result.stripped = result.stripped.toUpperCase();
+        result.ansi = result.ansi.toUpperCase();
+        result.isMisspelled = (token.info.glyph != result.glyph.toUpperCase());
+        result.soundex = self.soundex(result.ansi.toUpperCase());
+        result.type = "All-Caps match";
+
       } else if (matchCase in possibilities) {
         // Case sensitive, check for an exact match
         suggestion = possibilities[matchCase];
-        result = {
-          glyph: suggestion.glyph,
-          html: suggestion.html,
-          stripped: suggestion.stripped,
-          ansi: suggestion.ansi,
-          isMisspelled: (token.info.glyph != suggestion.glyph),
-          soundex: self.soundex(suggestion.ansi),
-          type: "exact case match"
-        };
+        result = JSON.parse(JSON.stringify(suggestion));
+
+        result.isMisspelled = (token.info.glyph != result.glyph);
+        result.soundex = self.soundex(result.ansi);
+        result.type = "exact case match";
+
       } else {
         // not all-caps and exact case match is not found
           // so we take the first match that at least matches case on the first letter
-          //
-          //
-          // ooops, this is not an array
         for (var key in possibilities) {
           suggestion = possibilities[key];
           if (!result && isProperCase(matchCase)===isProperCase(suggestion.stripped)) {
-            result = {
-              glyph: suggestion.glyph,
-              html: suggestion.html,
-              stripped: suggestion.stripped,
-              ansi: suggestion.ansi,
-              isMisspelled: (token.info.glyph != suggestion.glyph),
-              soundex: self.soundex(suggestion.ansi),
-              type: "inexact case match"
-            };
-            //console.log("Inexact case match: " + result.html);
+            result = JSON.parse(JSON.stringify(suggestion));
+
+            result.isMisspelled = (token.info.glyph != result.glyph);
+            result.soundex = self.soundex(result.ansi);
+            result.type = "inexact case match";
           }
         }
       }

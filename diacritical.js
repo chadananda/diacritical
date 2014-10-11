@@ -68,6 +68,7 @@ Diacritical.prototype.prepareDictionary = function(wordList) {
         list[base][word]['count']++;
         // concat items from this word onto the cumulative list
         list[base][word]['data']['ref'] = list[base][word]['data']['ref'].concat(word_data.ref);
+        list[base][word]['data']['ref'] = uniqueArray(list[base][word]['data']['ref']);
         list[base][word]['data']['original'] =  word_data.original?word_data.original:list[base][word]['data']['original'];
         list[base][word]['data']['definition'] =  word_data.definition?word_data.definition:list[base][word]['data']['definition'];
         list[base][word]['data']['alternates'] = list[base][word]['data']['alternates'].concat(word_data.alternates);
@@ -99,6 +100,12 @@ Diacritical.prototype.prepareDictionary = function(wordList) {
        newList.push(list[index][topword]['data']);
     }
     return newList;
+  }
+
+  function uniqueArray(a) {
+    return a.sort().filter(function(item, pos) {
+        return !pos || item != a[pos - 1];
+    })
   }
 };
 
@@ -377,7 +384,7 @@ Diacritical.prototype.replaceText = function(text, dictionary, options, report) 
   dictionary = self.prepareDictionary(dictionary);
  //console.log('dictionary',dictionary);
   self.addTermSuggestions(tokens, dictionary, report);
-//console.log('report', report);
+  //console.log('report', report);
   result = self.rebuildBlock(tokens, options);
  // console.log('result', result);
   return result;
